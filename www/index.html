@@ -379,6 +379,33 @@
       caret-color: var(--box-focus);
     }
 
+
+    /* Botão limpar do card: aparece quando o card está em edição */
+    .boxes { position: relative; }
+    .btn-limpar-card {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--btn-sec-bg);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+    .card:focus-within .btn-limpar-card {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .digit-box:focus {
       border-color: var(--box-focus);
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
@@ -794,6 +821,7 @@
 
     /* Estilos de Impressão */
     @media print {
+      .btn-limpar-card { display: none !important; }
       body {
         background: #fff !important;
         color: #000 !important;
@@ -1055,12 +1083,15 @@
     <section class="screen-voting" id="screenVoting" style="display:none; flex-direction:column; gap:9px;">
       <main class="cards-container">
         <!-- 1º Deputado Federal -->
-        <div class="card" data-cargo="dep_fed" data-turno="1" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="dep_fed" data-turno="1" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Deputado Federal</span>
             <span class="cargo-tag" id="tag_dep_fed">1º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
@@ -1069,12 +1100,15 @@
         </div>
 
         <!-- 2º Deputado Estadual -->
-        <div class="card" data-cargo="dep_est" data-turno="1" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="dep_est" data-turno="1" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Deputado Estadual</span>
             <span class="cargo-tag" id="tag_dep_est">2º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
@@ -1084,12 +1118,15 @@
         </div>
 
         <!-- 3º Senador 1 -->
-        <div class="card" data-cargo="sen_1" data-turno="1" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="sen_1" data-turno="1" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Senador (1ª Vaga)</span>
             <span class="cargo-tag" id="tag_sen_1">3º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
@@ -1097,12 +1134,15 @@
         </div>
 
         <!-- 4º Senador 2 -->
-        <div class="card" data-cargo="sen_2" data-turno="1" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="sen_2" data-turno="1" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Senador (2ª Vaga)</span>
             <span class="cargo-tag" id="tag_sen_2">4º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
@@ -1110,24 +1150,30 @@
         </div>
 
         <!-- 5º Governador -->
-        <div class="card" data-cargo="gov" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="gov" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Governador</span>
             <span class="cargo-tag" id="tag_gov">5º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
           </div>
         </div>
 
         <!-- 6º Presidente -->
-        <div class="card" data-cargo="pres" onclick="focarPrimeiroVazio(this)">
+        <div class="card" data-cargo="pres" onclick="cliqueCard(event, this)">
           <div class="card-header">
             <span class="cargo-nome">Presidente da República</span>
             <span class="cargo-tag" id="tag_pres">6º a votar</span>
           </div>
           <div class="boxes">
+            <button type="button" class="btn-limpar-card" title="Limpar campos" aria-label="Limpar campos do cargo" onclick="limparCard(event, this)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
             <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
           </div>
@@ -1294,6 +1340,11 @@
 
     const allInputs = Array.from(document.querySelectorAll('.digit-box'));
     allInputs.forEach((input, index) => {
+      // Ao tocar/focar, seleciona o conteúdo: o próximo dígito digitado substitui o atual
+      const selecionar = () => setTimeout(() => { try { input.select(); } catch (err) {} }, 0);
+      input.addEventListener('focus', selecionar);
+      input.addEventListener('click', selecionar);
+
       input.addEventListener('input', (e) => {
         const val = e.target.value.replace(/\D/g, '');
         e.target.value = val;
@@ -1308,6 +1359,20 @@
         }
       });
     });
+
+    // Clique no card foca o primeiro campo vazio, mas nunca rouba o foco de um campo ou botão tocado
+    function cliqueCard(ev, card) {
+      if (ev.target.closest('.digit-box, .btn-limpar-card')) return;
+      focarPrimeiroVazio(card);
+    }
+
+    function limparCard(ev, btn) {
+      ev.stopPropagation();
+      const card = btn.closest('.card');
+      const inputs = Array.from(card.querySelectorAll('.digit-box'));
+      inputs.forEach(i => i.value = '');
+      inputs[0].focus();
+    }
 
     function focarPrimeiroVazio(card) {
       const inputs = Array.from(card.querySelectorAll('.digit-box'));
