@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cola Eleitoral Ramos</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --box-border: #2e3b52;
+      --box-bg: rgba(255, 255, 255, 0.03);
+      --box-focus: #3b82f6;
+      --badge-bg: rgba(59, 130, 246, 0.15);
+      --badge-txt: #818cf8;
+      --btn-share: #2563eb;
+      --btn-sec-bg: #1e293b;
+      --btn-sec-txt: #e2e8f0;
+      --drawer-bg: #0f172a;
+      --drawer-border: #1e293b;
+      --scrollbar-track: #090d16;
+      --scrollbar-thumb: #1e293b;
+      --scrollbar-thumb-hover: #334155;
+      
+      /* Cores da Urna SVG no Dark Mode */
+      --urna-body: #0f172a;
+      --urna-screen: #020617;
+      --urna-border: #3b82f6;
+      --urna-screen-border: #2563eb;
+      --urna-key: #94a3b8;
+      --urna-key-white: #f8fafc;
+      --urna-key-white-border: transparent;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --box-border: #cbd5e1;
+      --box-bg: #f1f5f9;
+      --box-focus: #2563eb;
+      --badge-bg: #e0e7ff;
+      --badge-txt: #4338ca;
+      --btn-share: #2563eb;
+      --btn-sec-bg: #f1f5f9;
+      --btn-sec-txt: #1e293b;
+      --drawer-bg: #ffffff;
+      --drawer-border: #cbd5e1;
+      --scrollbar-track: #f1f5f9;
+      --scrollbar-thumb: #cbd5e1;
+      --scrollbar-thumb-hover: #94a3b8;
+
+      /* Cores da Urna SVG no Light Mode */
+      --urna-body: #f1f5f9;
+      --urna-screen: #ffffff;
+      --urna-border: #2563eb;
+      --urna-screen-border: #93c5fd;
+      --urna-key: #64748b;
+      --urna-key-white: #ffffff;
+      --urna-key-white-border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding-top: max(env(safe-area-inset-top, 0px), 44px);
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 24px);
+      padding-left: max(env(safe-area-inset-left, 0px), 14px);
+      padding-right: max(env(safe-area-inset-right, 0px), 14px);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Top Nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 0 6px;
+    }
+
+    .icon-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .top-title {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .top-title h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .top-title span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Tela de Boas-Vindas */
+    .screen-welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px 24px;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .welcome-hero-box {
+      width: 100%;
+      max-width: 105px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    [data-theme="light"] .welcome-hero-box {
+      filter: drop-shadow(0 8px 16px rgba(37, 99, 235, 0.15));
+    }
+
+    .welcome-hero-box svg {
+      width: 100%;
+      height: auto;
+    }
+
+    .welcome-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .welcome-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      max-width: 320px;
+      line-height: 1.4;
+      margin-top: -8px;
+    }
+
+    .create-card-box {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+    }
+
+    [data-theme="light"] .create-card-box {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid var(--box-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      padding: 11px 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+    }
+
+    [data-theme="light"] .form-input {
+      background: #ffffff;
+      border-color: #cbd5e1;
+    }
+
+    .form-input:focus {
+      border-color: var(--box-focus);
+    }
+
+    .turno-pills {
+      display: flex;
+      gap: 8px;
+    }
+
+    .turno-pill {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: 1.5px solid var(--box-border);
+      background: transparent;
+      color: var(--text-main);
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .turno-pill.active {
+      border-color: var(--btn-share);
+      background: rgba(37, 99, 235, 0.15);
+    }
+
+    [data-theme="light"] .turno-pill.active {
+      background: var(--btn-share);
+      color: #ffffff !important;
+    }
+
+    [data-theme="light"] .turno-pill.active .turno-sub {
+      color: rgba(255, 255, 255, 0.88) !important;
+    }
+
+    .turno-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .turno-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .btn-create-submit {
+      width: 100%;
+      background: var(--btn-share);
+      color: #ffffff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    /* Cards de Votação */
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 9px 12px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .card:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    .card.hidden-turno {
+      display: none !important;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cargo-nome {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cargo-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      background: var(--badge-bg);
+      color: var(--badge-txt);
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .boxes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .digit-box {
+      width: 42px;
+      height: 48px;
+      border-radius: 8px;
+      border: 1.5px solid var(--box-border);
+      background: var(--box-bg);
+      color: var(--text-main);
+      font-size: 1.45rem;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      caret-color: var(--box-focus);
+    }
+
+    .digit-box:focus {
+      border-color: var(--box-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+
+    /* Bottom Bar */
+    .bottom-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 10px 8px;
+      border-radius: 9px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-main {
+      flex: 1.3;
+      background: var(--btn-share);
+      color: #fff;
+    }
+
+    .btn-sec {
+      flex: 1;
+      background: var(--btn-sec-bg);
+      color: var(--btn-sec-txt);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Drawer Lateral */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 100;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 86%;
+      max-width: 380px;
+      background: var(--drawer-bg);
+      z-index: 101;
+      transform: translateX(-100%);
+      transition: transform 0.22s ease-out;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--drawer-border);
+      padding-top: max(env(safe-area-inset-top, 0px), 44px);
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
+      padding-left: 16px;
+      padding-right: 16px;
+      gap: 12px;
+    }
+
+    .drawer.active {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--drawer-border);
+      flex-shrink: 0;
+    }
+
+    .drawer-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .drawer-header span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .btn-drawer-create {
+      width: 100% !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      max-height: 44px !important;
+      flex: 0 0 44px !important;
+      padding: 0 14px !important;
+      font-size: 0.85rem !important;
+      box-sizing: border-box !important;
+    }
+
+    .backup-row {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-backup {
+      flex: 1;
+      height: 36px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* Barra de Seleção em Massa */
+    .batch-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .batch-bar.hidden {
+      display: none !important;
+    }
+
+    .batch-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .batch-actions-right {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn-batch {
+      padding: 6px 9px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+    }
+
+    .btn-batch-share { background: var(--btn-share); }
+    .btn-batch-print { background: #059669; }
+    .btn-batch-del { background: #dc2626; }
+
+    /* Lista de colinhas salvas */
+    .saved-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 14px;
+      padding-bottom: 10px;
+      padding-right: 4px;
+    }
+
+    .saved-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .saved-card:active {
+      cursor: grabbing;
+    }
+
+    .saved-card.dragging {
+      opacity: 0.45;
+      border-style: dashed;
+      cursor: grabbing;
+    }
+
+    .saved-card.is-active-card {
+      border-color: var(--box-focus);
+      box-shadow: 0 0 0 1.5px rgba(59, 130, 246, 0.35);
+    }
+
+    .badge-in-use {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      background: var(--btn-share);
+      color: #ffffff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .saved-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drag-handle {
+      cursor: grab;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .saved-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .saved-date {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: -3px;
+      margin-left: 28px;
+    }
+
+    .saved-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      padding: 7px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    [data-theme="light"] .saved-grid {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .grid-cell-label {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .grid-cell-val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--box-focus);
+    }
+
+    .saved-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .btn-saved-open {
+      flex: 1;
+      background: var(--btn-share);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 6px 8px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn-saved-icon {
+      background: var(--btn-sec-bg);
+      color: var(--btn-sec-txt);
+      border: 1px solid var(--card-border);
+      width: 29px;
+      height: 29px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .btn-saved-del {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      width: 29px;
+      height: 29px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Modais Customizados */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(4px);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .modal-icon-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .modal-icon-red {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .modal-icon-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6;
+    }
+
+    .btn-wa {
+      background: #25d366;
+      color: #fff;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      font-size: 0.84rem;
+    }
+
+    /* Estilos de Impressão */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0;
+      }
+      .top-nav, .bottom-actions, .overlay, .drawer, .modal, .screen-welcome {
+        display: none !important;
+      }
+      .screen-voting {
+        display: block !important;
+      }
+      .card {
+        border: 1px solid #000 !important;
+        background: #fff !important;
+        page-break-inside: avoid;
+        margin-bottom: 5px;
+        padding: 5px 8px;
+      }
+      .cargo-nome { color: #000 !important; }
+      .cargo-tag {
+        background: none !important;
+        color: #000 !important;
+        border: 1px solid #000;
+      }
+      .digit-box {
+        border-color: #000 !important;
+        background: #fff !important;
+        color: #000 !important;
+        height: 36px;
+        width: 30px;
+      }
+      .batch-print-sheet {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 10px;
+      }
+      .batch-print-item {
+        border: 1.5px dashed #000;
+        padding: 10px;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <div class="overlay" id="overlay" onclick="fecharDrawer()"></div>
+
+  <!-- Menu Lateral -->
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div>
+        <h2>Colinhas Salvas</h2>
+        <span>Gerenciador protegido na memória</span>
+      </div>
+      <button class="icon-btn" onclick="fecharDrawer()">✕</button>
+    </div>
+
+    <button class="btn btn-main btn-drawer-create" onclick="mostrarTelaCriacao()">
+      + Criar Nova Colinha
+    </button>
+
+    <div class="backup-row">
+      <button class="btn-backup" onclick="exportarBackup()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar Backup
+      </button>
+      <button class="btn-backup" onclick="acionarImportarArquivo()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importar Backup
+      </button>
+      <input type="file" id="importFileInput" accept=".json,application/json" style="display:none;" onchange="processarArquivoImportado(event)" />
+    </div>
+
+    <!-- Barra de Ações em Massa (invisível por padrão) -->
+    <div class="batch-bar hidden" id="batchBar">
+      <label class="batch-left">
+        <input type="checkbox" id="chkSelectAll" onchange="alternarSelecionarTodas(this.checked)" style="width:16px; height:16px; cursor:pointer;" />
+        <span id="batchCount">0 sel.</span>
+      </label>
+      <div class="batch-actions-right">
+        <button class="btn-batch btn-batch-share" onclick="compartilharSelecionadas()" title="Compartilhar Selecionadas">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Compartilhar
+        </button>
+        <button class="btn-batch btn-batch-print" onclick="imprimirSelecionadas()" title="Imprimir Selecionadas">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir
+        </button>
+        <button class="btn-batch btn-batch-del" onclick="confirmarExclusaoSelecionadas()" title="Excluir Selecionadas">
+          ✕ Excluir
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de Colinhas Salvas -->
+    <div class="saved-list" id="savedList"></div>
+  </aside>
+
+  <!-- Modal Personalizado de Sucesso / Notificação -->
+  <div class="modal" id="customAlertModal">
+    <div class="modal-box">
+      <div class="modal-icon-circle modal-icon-green" id="customAlertIconBox">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-size: 1rem; font-weight:800;" id="customAlertTitle">Sucesso</h3>
+      <p style="font-size: 0.8rem; color:var(--text-muted); line-height: 1.4;" id="customAlertMsg"></p>
+      <button class="btn btn-main" onclick="fecharCustomAlert()" style="margin-top: 4px;">OK, Entendi</button>
+    </div>
+  </div>
+
+  <!-- Modal Personalizado de Renomear -->
+  <div class="modal" id="customPromptModal">
+    <div class="modal-box">
+      <div class="modal-icon-circle modal-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight:800;">Renomear Colinha</h3>
+      <input type="text" class="form-input" id="customPromptInput" style="margin-top: 4px;" />
+      <div style="display:flex; gap:8px; margin-top:4px;">
+        <button class="btn btn-sec" onclick="fecharCustomPrompt()">Cancelar</button>
+        <button class="btn btn-main" id="btnCustomPromptConfirm">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Personalizado de Exclusão -->
+  <div class="modal" id="confirmDeleteModal">
+    <div class="modal-box">
+      <div class="modal-icon-circle modal-icon-red">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight:800; color:#ef4444;" id="deleteModalTitle">Confirmar Exclusão</h3>
+      <p style="font-size: 0.8rem; color:var(--text-muted);" id="deleteModalMsg">Deseja realmente apagar esta colinha?</p>
+      <div style="display:flex; gap:8px; margin-top:4px;">
+        <button class="btn btn-sec" onclick="fecharModalDelete()">Cancelar</button>
+        <button class="btn" style="background:#dc2626; color:#fff;" id="btnConfirmDeleteAction">Sim, Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Importação -->
+  <div class="modal" id="importModal">
+    <div class="modal-box">
+      <div class="modal-icon-circle modal-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight:800;">Importar Backup</h3>
+      <p style="font-size: 0.8rem; color:var(--text-muted);" id="importModalMsg"></p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+        <button class="btn btn-main" onclick="confirmarImportacao('mesclar')">Mesclar com as atuais</button>
+        <button class="btn" style="background:#dc2626; color:#fff;" onclick="confirmarImportacao('substituir')">Substituir tudo</button>
+        <button class="btn btn-sec" onclick="fecharModalImport()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Compartilhamento -->
+  <div class="modal" id="shareModal">
+    <div class="modal-box">
+      <h3 style="font-size: 0.95rem; font-weight:800;">Compartilhar Colinha</h3>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a id="btnWhatsApp" class="btn-wa" target="_blank">Enviar pelo WhatsApp</a>
+        <button class="btn btn-sec" onclick="copiarTextoCompartilhar()">Copiar Texto Completo</button>
+      </div>
+      <button class="btn btn-sec" onclick="fecharModalShare()">Fechar</button>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- Topo -->
+    <div class="top-nav">
+      <button class="icon-btn" onclick="abrirDrawer()" title="Abrir Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <div class="top-title" onclick="renomearColinhaAtual()">
+        <h1 id="appTitle">Colinha de Votação</h1>
+        <span id="appSubTitle">Ordem oficial da urna eletrônica</span>
+      </div>
+
+      <button class="icon-btn" onclick="alternarTema()" title="Alternar Modo Escuro / Claro">
+        <svg id="themeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+
+    <!-- TELA 1: Boas-Vindas / Criar Nova Colinha -->
+    <section class="screen-welcome" id="screenWelcome">
+      
+      <!-- ÍCONE ADAPTATIVO (DARK/LIGHT) EM TAMANHO PROPORCIONAL -->
+      <div class="welcome-hero-box">
+        <svg viewBox="0 0 100 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="96" height="78" rx="18" fill="var(--urna-body)" stroke="var(--urna-border)" stroke-width="3"/>
+          <rect x="9" y="10" width="34" height="62" rx="7" fill="var(--urna-screen)" stroke="var(--urna-screen-border)" stroke-width="2"/>
+          
+          <rect x="14" y="16" width="14" height="18" rx="3.5" fill="#3b82f6"/>
+          <circle cx="21" cy="22" r="3.8" fill="var(--urna-body)"/>
+          <path d="M15.5 32 C15.5 27, 26.5 27, 26.5 32" fill="var(--urna-body)"/>
+          
+          <line x1="14" y1="41" x2="38" y2="41" stroke="#64748b" stroke-width="2.4" stroke-linecap="round"/>
+          <line x1="14" y1="48" x2="32" y2="48" stroke="#64748b" stroke-width="2.4" stroke-linecap="round"/>
+          <line x1="14" y1="55" x2="26" y2="55" stroke="#64748b" stroke-width="2.4" stroke-linecap="round"/>
+
+          <g fill="var(--urna-key)">
+            <rect x="50" y="12" width="10" height="8" rx="2.5"/>
+            <rect x="64" y="12" width="10" height="8" rx="2.5"/>
+            <rect x="78" y="12" width="10" height="8" rx="2.5"/>
+
+            <rect x="50" y="24" width="10" height="8" rx="2.5"/>
+            <rect x="64" y="24" width="10" height="8" rx="2.5"/>
+            <rect x="78" y="24" width="10" height="8" rx="2.5"/>
+
+            <rect x="50" y="36" width="10" height="8" rx="2.5"/>
+            <rect x="64" y="36" width="10" height="8" rx="2.5"/>
+            <rect x="78" y="36" width="10" height="8" rx="2.5"/>
+
+            <rect x="64" y="48" width="10" height="8" rx="2.5"/>
+          </g>
+
+          <rect x="48" y="60" width="11" height="9" rx="2.5" fill="var(--urna-key-white)" stroke="var(--urna-key-white-border)" stroke-width="1"/>
+          <rect x="62" y="59" width="12" height="10" rx="2.5" fill="#f97316"/>
+          <rect x="77" y="56" width="14" height="13" rx="3.5" fill="#16a34a"/>
+        </svg>
+      </div>
+
+      <h2 class="welcome-title">Pronto para Votar?</h2>
+      <p class="welcome-sub">Crie sua colinha para liberar os campos de digitação na sequência oficial.</p>
+
+      <div class="create-card-box">
+        <h3 style="font-size:1.05rem; font-weight:800; text-align:center;">Criar Nova Colinha</h3>
+
+        <div class="form-group">
+          <label class="form-label">Nome da Colinha</label>
+          <input type="text" class="form-input" id="newColinhaName" placeholder="Ex: Minha Colinha" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Escolha o Turno</label>
+          <div class="turno-pills">
+            <div class="turno-pill active" id="pillTurno1" onclick="selecionarPillTurno(1)">
+              <span class="turno-title">1º Turno</span>
+              <span class="turno-sub">Completo (6 cargos)</span>
+            </div>
+            <div class="turno-pill" id="pillTurno2" onclick="selecionarPillTurno(2)">
+              <span class="turno-title">2º Turno</span>
+              <span class="turno-sub">Gov e Presidente</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-create-submit" onclick="executarCriacaoColinha()">
+          → Criar e Abrir
+        </button>
+      </div>
+    </section>
+
+    <!-- TELA 2: Interface de Votação com Cards de Dígitos -->
+    <section class="screen-voting" id="screenVoting" style="display:none; flex-direction:column; gap:9px;">
+      <main class="cards-container">
+        <!-- 1º Deputado Federal -->
+        <div class="card" data-cargo="dep_fed" data-turno="1" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Deputado Federal</span>
+            <span class="cargo-tag" id="tag_dep_fed">1º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+
+        <!-- 2º Deputado Estadual -->
+        <div class="card" data-cargo="dep_est" data-turno="1" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Deputado Estadual</span>
+            <span class="cargo-tag" id="tag_dep_est">2º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+
+        <!-- 3º Senador 1 -->
+        <div class="card" data-cargo="sen_1" data-turno="1" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Senador (1ª Vaga)</span>
+            <span class="cargo-tag" id="tag_sen_1">3º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+
+        <!-- 4º Senador 2 -->
+        <div class="card" data-cargo="sen_2" data-turno="1" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Senador (2ª Vaga)</span>
+            <span class="cargo-tag" id="tag_sen_2">4º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+
+        <!-- 5º Governador -->
+        <div class="card" data-cargo="gov" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Governador</span>
+            <span class="cargo-tag" id="tag_gov">5º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+
+        <!-- 6º Presidente -->
+        <div class="card" data-cargo="pres" onclick="focarPrimeiroVazio(this)">
+          <div class="card-header">
+            <span class="cargo-nome">Presidente da República</span>
+            <span class="cargo-tag" id="tag_pres">6º a votar</span>
+          </div>
+          <div class="boxes">
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+            <input type="tel" inputmode="numeric" maxlength="1" class="digit-box" />
+          </div>
+        </div>
+      </main>
+
+      <!-- Botões Inferiores -->
+      <div class="bottom-actions">
+        <button class="btn btn-main" onclick="abrirCompartilharAtual()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Compartilhar
+        </button>
+        <button class="btn btn-sec" onclick="salvarColinhaAtual()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salvar
+        </button>
+        <button class="btn btn-sec" onclick="window.print()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir
+        </button>
+        <button class="btn btn-sec" onclick="limparCampos()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Limpar
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="batchPrintArea" style="display:none;"></div>
+
+  <script>
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => {});
+    }
+
+    const Storage = {
+      get: (k) => {
+        try { return localStorage.getItem(k); } catch(e) { return window['__mem_' + k] || null; }
+      },
+      set: (k, v) => {
+        try { localStorage.setItem(k, v); } catch(e) { window['__mem_' + k] = v; }
+        salvarNoIndexedDB(k, v);
+      }
+    };
+
+    function salvarNoIndexedDB(key, val) {
+      try {
+        const req = indexedDB.open('ColinhaEleitoralDB', 1);
+        req.onupgradeneeded = (e) => {
+          e.target.result.createObjectStore('dados');
+        };
+        req.onsuccess = (e) => {
+          const db = e.target.result;
+          const tx = db.transaction('dados', 'readwrite');
+          tx.objectStore('dados').put(val, key);
+        };
+      } catch(e) {}
+    }
+
+    // Cargos: o id (data-cargo) é a chave estável dos dados salvos
+    const CARGOS = [
+      { id: 'dep_fed', nome: 'Deputado Federal',        curto: 'Dep. Fed.', turno: 1 },
+      { id: 'dep_est', nome: 'Deputado Estadual',       curto: 'Dep. Est.', turno: 1 },
+      { id: 'sen_1',   nome: 'Senador (1ª Vaga)',       curto: 'Senador 1', turno: 1 },
+      { id: 'sen_2',   nome: 'Senador (2ª Vaga)',       curto: 'Senador 2', turno: 1 },
+      { id: 'gov',     nome: 'Governador',              curto: 'Governador', turno: 0 },
+      { id: 'pres',    nome: 'Presidente da República', curto: 'Presidente', turno: 0 }
+    ];
+    const NOME_PARA_ID = {
+      'Deputado Federal': 'dep_fed',
+      'Deputado Estadual': 'dep_est',
+      'Deputado Estadual / Distrital': 'dep_est',
+      'Senador (1ª Vaga)': 'sen_1',
+      'Senador (2ª Vaga)': 'sen_2',
+      'Governador': 'gov',
+      'Presidente da República': 'pres'
+    };
+
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, ch => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+      ));
+    }
+
+    // Cargos exibidos em uma colinha (no 2º turno só Governador e Presidente)
+    function cargosDaColinha(c) {
+      return CARGOS.filter(x => c.turno !== 2 || x.turno === 0);
+    }
+
+    // Normaliza uma colinha (formato antigo por nome de cargo ou novo por id). Retorna null se inválida.
+    function normalizarColinha(c, seq) {
+      if (!c || typeof c !== 'object') return null;
+      const dados = {};
+      const origem = (c.dados && typeof c.dados === 'object') ? c.dados : {};
+      for (const [k, v] of Object.entries(origem)) {
+        const id = CARGOS.some(x => x.id === k) ? k : NOME_PARA_ID[k];
+        if (id) dados[id] = String(v == null ? '' : v).replace(/\D/g, '').slice(0, 5);
+      }
+      const idNum = Number(c.id);
+      return {
+        id: Number.isFinite(idNum) && idNum > 0 ? idNum : Date.now() + (seq || 0),
+        titulo: String(c.titulo || '').trim().slice(0, 60) || 'Colinha sem nome',
+        turno: c.turno === 2 ? 2 : 1,
+        data: typeof c.data === 'string' ? c.data : '',
+        dados
+      };
+    }
+
+    function normalizarLista(lista) {
+      const vistos = new Set();
+      const out = [];
+      (Array.isArray(lista) ? lista : []).forEach((c, i) => {
+        const n = normalizarColinha(c, i);
+        if (!n) return;
+        while (vistos.has(n.id)) n.id++;
+        vistos.add(n.id);
+        out.push(n);
+      });
+      return out;
+    }
+
+    let colinhas = [];
+    try {
+      colinhas = normalizarLista(JSON.parse(Storage.get('colinhas_db') || '[]'));
+    } catch(e) {
+      colinhas = [];
+    }
+
+    let colinhaAtivaId = null;
+    let turnoCriacao = 1;
+    let selecionados = new Set();
+    let draggingItemIndex = null;
+
+    function mostrarCustomAlert(titulo, mensagem, tipo = 'green') {
+      document.getElementById('customAlertTitle').textContent = titulo;
+      document.getElementById('customAlertMsg').textContent = mensagem;
+      const iconBox = document.getElementById('customAlertIconBox');
+      iconBox.className = 'modal-icon-circle ' + (tipo === 'red' ? 'modal-icon-red' : (tipo === 'blue' ? 'modal-icon-blue' : 'modal-icon-green'));
+      document.getElementById('customAlertModal').classList.add('active');
+    }
+
+    function fecharCustomAlert() {
+      document.getElementById('customAlertModal').classList.remove('active');
+    }
+
+    let callbackPrompt = null;
+    function mostrarCustomPrompt(titulo, valorInicial, callback) {
+      const inp = document.getElementById('customPromptInput');
+      inp.value = valorInicial;
+      callbackPrompt = callback;
+      document.getElementById('btnCustomPromptConfirm').onclick = () => {
+        const val = inp.value.trim();
+        if (val && callbackPrompt) callbackPrompt(val);
+        fecharCustomPrompt();
+      };
+      document.getElementById('customPromptModal').classList.add('active');
+      setTimeout(() => inp.focus(), 80);
+    }
+
+    function fecharCustomPrompt() {
+      document.getElementById('customPromptModal').classList.remove('active');
+      callbackPrompt = null;
+    }
+
+    const allInputs = Array.from(document.querySelectorAll('.digit-box'));
+    allInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
+        if (val && index < allInputs.length - 1) {
+          allInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          allInputs[index - 1].focus();
+        }
+      });
+    });
+
+    function focarPrimeiroVazio(card) {
+      const inputs = Array.from(card.querySelectorAll('.digit-box'));
+      const vazio = inputs.find(i => !i.value);
+      if (vazio) vazio.focus();
+      else if (inputs.length > 0) inputs[0].focus();
+    }
+
+    function selecionarPillTurno(t) {
+      turnoCriacao = t;
+      document.getElementById('pillTurno1').classList.toggle('active', t === 1);
+      document.getElementById('pillTurno2').classList.toggle('active', t === 2);
+    }
+
+    function mostrarTelaCriacao() {
+      fecharDrawer();
+      colinhaAtivaId = null;
+      document.getElementById('screenVoting').style.display = 'none';
+      document.getElementById('screenWelcome').style.display = 'flex';
+      document.getElementById('newColinhaName').value = `Colinha ${colinhas.length + 1}`;
+      selecionarPillTurno(1);
+      document.getElementById('appTitle').textContent = 'Colinha de Votação';
+      document.getElementById('appSubTitle').textContent = 'Ordem oficial da urna eletrônica';
+    }
+
+    function executarCriacaoColinha() {
+      const nomeInput = document.getElementById('newColinhaName').value.trim();
+      const nome = nomeInput || `Colinha ${colinhas.length + 1}`;
+
+      const nova = {
+        id: Date.now(),
+        titulo: nome,
+        turno: turnoCriacao,
+        data: new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }),
+        dados: {}
+      };
+
+      colinhas.unshift(nova);
+      salvarMemoria();
+      abrirColinha(nova.id);
+    }
+
+    function abrirColinha(id) {
+      const c = colinhas.find(x => x.id === id);
+      if (!c) return;
+
+      colinhaAtivaId = c.id;
+      fecharDrawer();
+
+      document.getElementById('screenWelcome').style.display = 'none';
+      const screenVoting = document.getElementById('screenVoting');
+      screenVoting.style.display = 'flex';
+
+      document.getElementById('appTitle').textContent = c.titulo;
+      document.getElementById('appSubTitle').textContent = `${c.turno}º Turno • Toque para renomear`;
+
+      aplicarVisualTurno(c.turno);
+      preencherDadosForm(c.dados || {});
+
+      setTimeout(() => {
+        const first = document.querySelector('.card:not(.hidden-turno) .digit-box');
+        if (first) first.focus();
+      }, 50);
+    }
+
+    function aplicarVisualTurno(turno) {
+      const cardsTurno1 = document.querySelectorAll('.card[data-turno="1"]');
+      const tagGov = document.getElementById('tag_gov');
+      const tagPres = document.getElementById('tag_pres');
+
+      if (turno === 2) {
+        cardsTurno1.forEach(card => card.classList.add('hidden-turno'));
+        tagGov.textContent = '1º a votar';
+        tagPres.textContent = '2º a votar';
+      } else {
+        cardsTurno1.forEach(card => card.classList.remove('hidden-turno'));
+        tagGov.textContent = '5º a votar';
+        tagPres.textContent = '6º a votar';
+      }
+    }
+
+    // Parte dos dados já salvos para não perder cargos ocultos (2º turno)
+    function coletarDadosForm(base) {
+      const dados = Object.assign({}, base || {});
+      document.querySelectorAll('.card:not(.hidden-turno)').forEach(card => {
+        dados[card.dataset.cargo] = Array.from(card.querySelectorAll('.digit-box')).map(i => i.value || '').join('');
+      });
+      return dados;
+    }
+
+    function preencherDadosForm(dados) {
+      document.querySelectorAll('.card').forEach(card => {
+        const val = dados[card.dataset.cargo] || '';
+        card.querySelectorAll('.digit-box').forEach((input, idx) => {
+          input.value = val[idx] || '';
+        });
+      });
+    }
+
+    function limparCampos() {
+      document.querySelectorAll('.digit-box').forEach(i => i.value = '');
+      const first = document.querySelector('.card:not(.hidden-turno) .digit-box');
+      if (first) first.focus();
+    }
+
+    function salvarColinhaAtual() {
+      if (!colinhaAtivaId) return;
+      const c = colinhas.find(x => x.id === colinhaAtivaId);
+      if (!c) return;
+
+      c.dados = coletarDadosForm(c.dados);
+      c.data = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+      salvarMemoria();
+      mostrarCustomAlert('Colinha Salva', `A colinha "${c.titulo}" foi guardada com sucesso!`);
+    }
+
+    function renomearColinhaAtual() {
+      if (!colinhaAtivaId) return;
+      const c = colinhas.find(x => x.id === colinhaAtivaId);
+      if (!c) return;
+
+      mostrarCustomPrompt('Renomear Colinha', c.titulo, (novoNome) => {
+        c.titulo = novoNome;
+        salvarMemoria();
+        document.getElementById('appTitle').textContent = c.titulo;
+      });
+    }
+
+    function salvarMemoria() {
+      Storage.set('colinhas_db', JSON.stringify(colinhas));
+    }
+
+    function abrirDrawer() {
+      renderizarListaSalvas();
+      document.getElementById('overlay').classList.add('active');
+      document.getElementById('drawer').classList.add('active');
+    }
+
+    function fecharDrawer() {
+      document.getElementById('overlay').classList.remove('active');
+      document.getElementById('drawer').classList.remove('active');
+    }
+
+    function renderizarListaSalvas() {
+      const container = document.getElementById('savedList');
+      if (colinhas.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:30px 10px; color:var(--text-muted); font-size:0.75rem;">
+            Nenhuma colinha salva na memória.<br>Toque no botão acima para criar a primeira.
+          </div>
+        `;
+        atualizarBarraSelecao();
+        return;
+      }
+
+      container.innerHTML = colinhas.map((c, index) => {
+        const isAtiva = c.id === colinhaAtivaId;
+        const isSelected = selecionados.has(c.id);
+
+        const dadosObj = c.dados || {};
+        const preenchida = Object.values(dadosObj).some(v => v);
+
+        let gridHtml = '';
+        if (preenchida) {
+          gridHtml = cargosDaColinha(c).map(x => `
+            <div>
+              <div class="grid-cell-label">${x.curto}</div>
+              <div class="grid-cell-val">${esc(dadosObj[x.id]) || '—'}</div>
+            </div>
+          `).join('');
+        } else {
+          gridHtml = `<div style="grid-column:1/-1; font-size:0.7rem; color:var(--text-muted);">Campos ainda não preenchidos</div>`;
+        }
+
+        const dataTexto = esc((c.data && c.data !== 'undefined') ? c.data : 'Salvo na memória');
+
+        return `
+          <div class="saved-card ${isAtiva ? 'is-active-card' : ''}" 
+               data-id="${c.id}" 
+               data-index="${index}"
+               draggable="true"
+               ondragstart="iniciarArrasto(event, ${index})"
+               ondragover="sobrevoarArrasto(event)"
+               ondrop="soltarArrasto(event, ${index})"
+               ondragend="finalizarArrasto(event)">
+            
+            ${isAtiva ? '<span class="badge-in-use">EM USO</span>' : ''}
+
+            <div class="saved-card-top">
+              <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelecao(${c.id}, this.checked)" style="width:16px; height:16px; cursor:pointer;" />
+              <span class="drag-handle" title="Arraste para reposicionar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+              </span>
+              <span class="saved-title" onclick="abrirColinha(${c.id})">${esc(c.titulo)}</span>
+              <span class="cargo-tag">${c.turno}º Turno</span>
+            </div>
+
+            <div class="saved-date">${dataTexto}</div>
+
+            <div class="saved-grid">
+              ${gridHtml}
+            </div>
+
+            <div class="saved-card-actions">
+              <button class="btn-saved-open" onclick="abrirColinha(${c.id})">
+                ${isAtiva ? 'Em Edição' : 'Abrir / Editar'}
+              </button>
+              <button class="btn-saved-icon" onclick="moverItem(${index}, -1)" title="Subir">▲</button>
+              <button class="btn-saved-icon" onclick="moverItem(${index}, 1)" title="Descer">▼</button>
+              <button class="btn-saved-icon" onclick="compartilharColinhaUnica(${c.id})" title="Compartilhar">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <button class="btn-saved-icon" onclick="imprimirColinhaUnica(${c.id})" title="Imprimir">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              </button>
+              <button class="btn-saved-del" onclick="solicitarExclusaoUnica(${c.id})" title="Excluir">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      atualizarBarraSelecao();
+    }
+
+    function iniciarArrasto(e, index) {
+      draggingItemIndex = index;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function sobrevoarArrasto(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function soltarArrasto(e, targetIndex) {
+      e.preventDefault();
+      if (draggingItemIndex === null || draggingItemIndex === targetIndex) return;
+
+      const item = colinhas.splice(draggingItemIndex, 1)[0];
+      colinhas.splice(targetIndex, 0, item);
+      salvarMemoria();
+      renderizarListaSalvas();
+    }
+
+    function finalizarArrasto(e) {
+      e.target.classList.remove('dragging');
+      draggingItemIndex = null;
+    }
+
+    function moverItem(index, direcao) {
+      const novoIndex = index + direcao;
+      if (novoIndex < 0 || novoIndex >= colinhas.length) return;
+
+      const item = colinhas.splice(index, 1)[0];
+      colinhas.splice(novoIndex, 0, item);
+      salvarMemoria();
+      renderizarListaSalvas();
+    }
+
+    function toggleSelecao(id, check) {
+      if (check) selecionados.add(id);
+      else selecionados.delete(id);
+      atualizarBarraSelecao();
+    }
+
+    function alternarSelecionarTodas(marcar) {
+      if (marcar) {
+        colinhas.forEach(c => selecionados.add(c.id));
+      } else {
+        selecionados.clear();
+      }
+      renderizarListaSalvas();
+    }
+
+    function atualizarBarraSelecao() {
+      const bar = document.getElementById('batchBar');
+      const chkAll = document.getElementById('chkSelectAll');
+      const count = document.getElementById('batchCount');
+
+      if (selecionados.size > 0) {
+        bar.classList.remove('hidden');
+        count.textContent = `${selecionados.size} sel.`;
+        chkAll.checked = (selecionados.size === colinhas.length && colinhas.length > 0);
+      } else {
+        bar.classList.add('hidden');
+        chkAll.checked = false;
+      }
+    }
+
+    let acaoExclusaoConfirmada = null;
+
+    function solicitarExclusaoUnica(id) {
+      const c = colinhas.find(x => x.id === id);
+      if (!c) return;
+
+      document.getElementById('deleteModalTitle').textContent = 'Excluir Colinha';
+      document.getElementById('deleteModalMsg').textContent = `Deseja realmente apagar a "${c.titulo}"?`;
+      acaoExclusaoConfirmada = () => {
+        colinhas = colinhas.filter(x => x.id !== id);
+        selecionados.delete(id);
+        salvarMemoria();
+        fecharModalDelete();
+
+        if (colinhaAtivaId === id || colinhas.length === 0) {
+          mostrarTelaCriacao();
+        } else {
+          renderizarListaSalvas();
+        }
+      };
+      abrirModalDelete();
+    }
+
+    function confirmarExclusaoSelecionadas() {
+      if (selecionados.size === 0) return;
+
+      document.getElementById('deleteModalTitle').textContent = 'Excluir Selecionadas';
+      document.getElementById('deleteModalMsg').textContent = `Deseja excluir ${selecionados.size} colinha(s) selecionada(s)?`;
+      acaoExclusaoConfirmada = () => {
+        const ids = Array.from(selecionados);
+        colinhas = colinhas.filter(c => !ids.includes(c.id));
+        const excluiuAtiva = ids.includes(colinhaAtivaId);
+        selecionados.clear();
+        salvarMemoria();
+        fecharModalDelete();
+
+        if (excluiuAtiva || colinhas.length === 0) {
+          mostrarTelaCriacao();
+        } else {
+          renderizarListaSalvas();
+        }
+      };
+      abrirModalDelete();
+    }
+
+    function abrirModalDelete() {
+      document.getElementById('confirmDeleteModal').classList.add('active');
+      document.getElementById('btnConfirmDeleteAction').onclick = acaoExclusaoConfirmada;
+    }
+
+    function fecharModalDelete() {
+      document.getElementById('confirmDeleteModal').classList.remove('active');
+    }
+
+    function formatarTextoColinha(c) {
+      let t = `📋 *${c.titulo}* (${c.turno}º Turno)\n`;
+      t += `---------------------------------\n`;
+      cargosDaColinha(c).forEach(x => {
+        t += `• *${x.nome}*: ${(c.dados || {})[x.id] || '____'}\n`;
+      });
+      return t;
+    }
+
+    function abrirCompartilharAtual() {
+      if (!colinhaAtivaId) return;
+      const c = colinhas.find(x => x.id === colinhaAtivaId);
+      if (!c) return;
+      c.dados = coletarDadosForm(c.dados);
+      salvarMemoria();
+      dispararCompartilhar(formatarTextoColinha(c));
+    }
+
+    function compartilharColinhaUnica(id) {
+      const c = colinhas.find(x => x.id === id);
+      if (!c) return;
+      dispararCompartilhar(formatarTextoColinha(c));
+    }
+
+    function compartilharSelecionadas() {
+      if (selecionados.size === 0) return;
+      const lista = colinhas.filter(c => selecionados.has(c.id));
+      let texto = `📋 *COLINHAS ELEITORAIS (${lista.length})*\n\n`;
+      lista.forEach(c => {
+        texto += formatarTextoColinha(c) + '\n';
+      });
+      dispararCompartilhar(texto);
+    }
+
+    let textoParaCopiar = '';
+    function dispararCompartilhar(texto) {
+      textoParaCopiar = texto;
+      if (navigator.share) {
+        navigator.share({ title: 'Colinha Eleitoral', text: texto }).catch(() => {
+          mostrarModalShare(texto);
+        });
+      } else {
+        mostrarModalShare(texto);
+      }
+    }
+
+    function mostrarModalShare(texto) {
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+      document.getElementById('btnWhatsApp').setAttribute('href', waUrl);
+      document.getElementById('shareModal').classList.add('active');
+    }
+
+    function fecharModalShare() {
+      document.getElementById('shareModal').classList.remove('active');
+    }
+
+    function copiarTextoCompartilhar() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textoParaCopiar).then(() => {
+          mostrarCustomAlert('Copiado!', 'Texto copiado para a área de transferência.');
+          fecharModalShare();
+        });
+      } else {
+        mostrarCustomAlert('Aviso', 'Não foi possível copiar automaticamente.');
+        fecharModalShare();
+      }
+    }
+
+    function imprimirColinhaUnica(id) {
+      abrirColinha(id);
+      setTimeout(() => window.print(), 150);
+    }
+
+    function imprimirSelecionadas() {
+      if (selecionados.size === 0) return;
+      const lista = colinhas.filter(c => selecionados.has(c.id));
+
+      const printArea = document.getElementById('batchPrintArea');
+      printArea.innerHTML = `
+        <div class="batch-print-sheet">
+          ${lista.map(c => `
+            <div class="batch-print-item">
+              <h3 style="font-size:14px; margin-bottom:4px;">${esc(c.titulo)} (${c.turno}º Turno)</h3>
+              <div style="font-size:11px; margin-bottom:8px; color:#555;">${esc(c.data)}</div>${cargosDaColinha(c).map(x => `
+                <div style="display:flex; justify-content:space-between; border-bottom:1px dotted #ccc; padding:3px 0; font-size:12px;">
+                  <span>${x.nome}:</span>
+                  <strong style="font-family:monospace; font-size:14px;">${esc((c.dados || {})[x.id]) || '____'}</strong>
+                </div>
+              `).join('')}
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      fecharDrawer();
+      setTimeout(() => window.print(), 150);
+    }
+
+    /* EXPORTAÇÃO E IMPORTAÇÃO NATIVAS (CAPACITOR SHARE + GAVETA ANDROID) */
+    async function exportarBackup() {
+      if (colinhas.length === 0) {
+        mostrarCustomAlert('Aviso', 'Nenhuma colinha salva para exportar.', 'blue');
+        return;
+      }
+
+      const dadosJson = JSON.stringify(colinhas, null, 2);
+      const dataHoje = new Date().toISOString().slice(0, 10);
+      const nomeArquivo = `backup_colinhas_${dataHoje}.json`;
+
+      try {
+        // Integração Capacitor Nativa
+        if (window.Capacitor && window.Capacitor.Plugins) {
+          const { Filesystem, Share } = window.Capacitor.Plugins;
+          
+          let fileUri = '';
+          if (Filesystem) {
+            const savedFile = await Filesystem.writeFile({
+              path: nomeArquivo,
+              data: dadosJson,
+              directory: 'CACHE',
+              encoding: 'utf8'
+            });
+            fileUri = savedFile.uri;
+          }
+
+          if (Share) {
+            await Share.share({
+              title: 'Salvar Backup da Colinha',
+              text: 'Selecione onde deseja salvar o backup:',
+              url: fileUri,
+              dialogTitle: 'Salvar ou Compartilhar Backup'
+            });
+            return;
+          }
+        }
+
+        // Web Share API com Arquivo
+        if (navigator.share) {
+          const file = new File([dadosJson], nomeArquivo, { type: 'application/json' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'Salvar Backup',
+              text: 'Selecione o local para salvar o seu arquivo:'
+            });
+            return;
+          }
+        }
+
+        mostrarCustomAlert('Aviso', 'Abra a permissão de compartilhamento do seu sistema.', 'blue');
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error(err);
+        }
+      }
+    }
+
+    function acionarImportarArquivo() {
+      const input = document.getElementById('importFileInput');
+      input.value = '';
+      input.click();
+    }
+
+    let importPendente = null;
+
+    function processarArquivoImportado(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        let lista = [];
+        try {
+          lista = normalizarLista(JSON.parse(event.target.result));
+        } catch (err) {
+          mostrarCustomAlert('Erro de Leitura', 'Não foi possível ler o arquivo selecionado.', 'red');
+          return;
+        }
+        if (lista.length === 0) {
+          mostrarCustomAlert('Arquivo Inválido', 'O arquivo selecionado não contém colinhas válidas.', 'red');
+          return;
+        }
+        if (colinhas.length === 0) {
+          importPendente = lista;
+          confirmarImportacao('substituir');
+          return;
+        }
+        importPendente = lista;
+        document.getElementById('importModalMsg').textContent =
+          `O arquivo tem ${lista.length} colinha(s) e você já tem ${colinhas.length} salva(s). O que deseja fazer?`;
+        document.getElementById('importModal').classList.add('active');
+      };
+      reader.readAsText(file);
+    }
+
+    function fecharModalImport() {
+      document.getElementById('importModal').classList.remove('active');
+      importPendente = null;
+    }
+
+    function confirmarImportacao(modo) {
+      const lista = importPendente;
+      document.getElementById('importModal').classList.remove('active');
+      importPendente = null;
+      if (!lista) return;
+
+      let adicionadas = lista.length;
+      if (modo === 'mesclar') {
+        const ids = new Set(colinhas.map(c => c.id));
+        const novas = lista.filter(c => !ids.has(c.id));
+        adicionadas = novas.length;
+        colinhas = colinhas.concat(novas);
+      } else {
+        // guarda cópia das atuais antes de substituir
+        if (colinhas.length > 0) Storage.set('colinhas_db_antes_import', JSON.stringify(colinhas));
+        colinhas = lista;
+      }
+      selecionados.clear();
+      salvarMemoria();
+      renderizarListaSalvas();
+      abrirColinha(colinhas[0].id);
+      mostrarCustomAlert('Backup Importado', modo === 'mesclar'
+        ? `${adicionadas} colinha(s) adicionada(s). As repetidas foram ignoradas.`
+        : `${colinhas.length} colinha(s) restaurada(s).`);
+    }
+
+    function alternarTema() {
+      const b = document.body;
+      const novo = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      b.setAttribute('data-theme', novo);
+      Storage.set('colinha_theme', novo);
+    }
+
+    const tSalvo = Storage.get('colinha_theme') || 'dark';
+    document.body.setAttribute('data-theme', tSalvo);
+
+    // Cópia de segurança: se o localStorage vier vazio (dados limpos pelo sistema), tenta recuperar do IndexedDB
+    function restaurarDoIndexedDB() {
+      try {
+        const req = indexedDB.open('ColinhaEleitoralDB', 1);
+        req.onupgradeneeded = (e) => e.target.result.createObjectStore('dados');
+        req.onsuccess = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('dados')) return;
+          const get = db.transaction('dados', 'readonly').objectStore('dados').get('colinhas_db');
+          get.onsuccess = () => {
+            if (colinhas.length > 0 || !get.result) return;
+            let lista = [];
+            try { lista = normalizarLista(JSON.parse(get.result)); } catch (err) { return; }
+            if (lista.length === 0) return;
+            colinhas = lista;
+            salvarMemoria();
+            abrirColinha(colinhas[0].id);
+            mostrarCustomAlert('Colinhas Recuperadas', `${colinhas.length} colinha(s) restaurada(s) da cópia de segurança.`, 'blue');
+          };
+        };
+      } catch (err) {}
+    }
+
+    if (colinhas.length > 0) {
+      salvarMemoria(); // grava já no formato normalizado (migra colinhas antigas)
+      abrirColinha(colinhas[0].id);
+    } else {
+      mostrarTelaCriacao();
+      restaurarDoIndexedDB();
+    }
+  </script>
+</body>
+</html>
