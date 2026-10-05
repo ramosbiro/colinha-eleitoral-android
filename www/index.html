@@ -1057,7 +1057,7 @@
 
       <div>
         <div class="about-sec-title">Aviso</div>
-        <p class="about-note">Aplicativo independente de apoio ao eleitor. Não possui vínculo com a Justiça Eleitoral, o TSE, partidos ou candidatos. Funciona sem internet, não coleta nem envia dados: suas colinhas ficam somente neste aparelho. Confira sempre o número do candidato na urna antes de confirmar.</p>
+        <p class="about-note">Aplicativo independente de apoio ao eleitor. Não possui vínculo com a Justiça Eleitoral, o TSE, partidos ou candidatos. Funciona sem internet e não coleta nem envia dados: suas colinhas ficam armazenadas apenas no seu aparelho (o Android pode incluí-las no backup da sua conta Google, conforme as configurações do sistema). Confira sempre o número do candidato na urna antes de confirmar.</p>
       </div>
 
       <button class="btn btn-sec" onclick="fecharSobre()">Fechar</button>
@@ -2379,6 +2379,7 @@
     const FASE_APP = 'Beta';                       // Beta → Release Candidate → Estável
     const BUILD_DATE = '05/10/2026';           // preenchido pelo build.sh
     const CHANGELOG = [
+      { v: '1.9', t: 'Textos de privacidade revisados e materiais de publicação na Google Play.' },
       { v: '1.8', t: 'Tela "Sobre o app" com informações da versão e atualização interna por APK.' },
       { v: '1.7', t: 'Compartilhar em PDF (A4) ou texto, com escolha do formato.' },
       { v: '1.6', t: 'Compartilhar pelo menu do Android, para qualquer aplicativo, com texto formatado.' },
@@ -2426,7 +2427,7 @@
         linhaSobre('Android', info ? `${info.androidVersion} (API ${info.sdk})` : '—') +
         linhaSobre('Aparelho', info ? info.device : '—') +
         linhaSobre('Colinhas salvas', String(colinhas.length)) +
-        linhaSobre('Armazenamento', 'Somente neste aparelho');
+        linhaSobre('Armazenamento', 'Local, neste aparelho');
 
       document.getElementById('aboutChangelog').innerHTML = CHANGELOG.map(
         (c) => `<div class="changelog-item"><b>v${c.v}</b> — ${esc(c.t)}</div>`).join('');
