@@ -751,6 +751,38 @@
     }
 
     /* Modais Customizados */
+
+    [hidden] { display: none !important; }
+
+    /* Sobre o app */
+    .btn-about {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; height: 40px; border-radius: 10px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      color: var(--text-muted); font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .modal-box.about-box { max-width: 380px; max-height: 90vh; overflow-y: auto; text-align: left; gap: 14px; }
+    .about-top { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+    .about-name { font-size: 1.15rem; font-weight: 900; }
+    .about-badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .pill { font-size: 0.65rem; font-weight: 800; padding: 3px 9px; border-radius: 99px; letter-spacing: 0.3px; text-transform: uppercase; }
+    .pill-ver { background: var(--badge-bg); color: var(--badge-txt); }
+    .pill-fase { background: rgba(245, 158, 11, 0.16); color: #f59e0b; }
+    .about-sec-title { font-size: 0.66rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .about-list { border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; }
+    .about-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 11px; font-size: 0.76rem; border-bottom: 1px solid var(--card-border); }
+    .about-row:last-child { border-bottom: none; }
+    .about-row span:first-child { color: var(--text-muted); font-weight: 600; flex-shrink: 0; }
+    .about-row span:last-child { font-weight: 700; text-align: right; word-break: break-word; }
+    .about-note { font-size: 0.72rem; color: var(--text-muted); line-height: 1.45; }
+    .about-update { display: flex; flex-direction: column; gap: 8px; }
+    .about-status { font-size: 0.74rem; line-height: 1.4; padding: 9px 11px; border-radius: 9px; background: var(--badge-bg); color: var(--text-main); }
+    .about-status.erro { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .changelog { display: flex; flex-direction: column; gap: 8px; }
+    .changelog-item { font-size: 0.74rem; line-height: 1.4; }
+    .changelog-item b { color: var(--box-focus); }
+
     .modal {
       position: fixed;
       inset: 0;
@@ -916,6 +948,11 @@
 
     <!-- Lista de Colinhas Salvas -->
     <div class="saved-list" id="savedList"></div>
+
+    <button class="btn-about" onclick="abrirSobre()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Sobre o app · <span id="drawerVer">v—</span>
+    </button>
   </aside>
 
   <!-- Modal Personalizado de Sucesso / Notificação -->
@@ -973,6 +1010,57 @@
         <button class="btn" style="background:#dc2626; color:#fff;" onclick="confirmarImportacao('substituir')">Substituir tudo</button>
         <button class="btn btn-sec" onclick="fecharModalImport()">Cancelar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Sobre -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-box about-box">
+      <div class="about-top">
+        <div class="modal-icon-circle modal-icon-blue" style="width:52px;height:52px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M8 6V4h8v2"/><line x1="8" y1="11" x2="8.01" y2="11"/><line x1="12" y1="11" x2="12.01" y2="11"/><line x1="16" y1="11" x2="16.01" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/></svg>
+        </div>
+        <div class="about-name">Colinha Eleitoral</div>
+        <div class="about-badges">
+          <span class="pill pill-ver" id="aboutPillVer">v—</span>
+          <span class="pill pill-fase" id="aboutPillFase">Beta</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="about-sec-title">Aplicativo</div>
+        <div class="about-list" id="aboutApp"></div>
+      </div>
+
+      <div>
+        <div class="about-sec-title">Aparelho e dados</div>
+        <div class="about-list" id="aboutDevice"></div>
+      </div>
+
+      <div class="about-update" id="aboutUpdateBox" hidden>
+        <div class="about-sec-title" style="margin-bottom:0;">Atualização</div>
+        <p class="about-note">Escolha o arquivo APK da nova versão no seu aparelho. O app confere se é o mesmo aplicativo e abre o instalador do Android. Suas colinhas são mantidas.</p>
+        <div class="about-status" id="aboutStatus" hidden></div>
+        <div style="display:flex; gap:8px;" id="aboutUpdateButtons">
+          <button class="btn btn-main" style="flex:1;" onclick="atualizarApp()">Buscar APK e atualizar</button>
+        </div>
+        <div style="display:flex; gap:8px;" id="aboutConfirmButtons" hidden>
+          <button class="btn btn-main" style="flex:1;" onclick="confirmarInstalacao()">Instalar</button>
+          <button class="btn btn-sec" style="flex:1;" onclick="cancelarInstalacao()">Cancelar</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="about-sec-title">Novidades</div>
+        <div class="changelog" id="aboutChangelog"></div>
+      </div>
+
+      <div>
+        <div class="about-sec-title">Aviso</div>
+        <p class="about-note">Aplicativo independente de apoio ao eleitor. Não possui vínculo com a Justiça Eleitoral, o TSE, partidos ou candidatos. Funciona sem internet, não coleta nem envia dados: suas colinhas ficam somente neste aparelho. Confira sempre o número do candidato na urna antes de confirmar.</p>
+      </div>
+
+      <button class="btn btn-sec" onclick="fecharSobre()">Fechar</button>
     </div>
   </div>
 
@@ -2285,6 +2373,132 @@
 
     const tSalvo = Storage.get('colinha_theme') || 'dark';
     document.body.setAttribute('data-theme', tSalvo);
+
+
+    /* ---------- SOBRE O APP / ATUALIZAÇÃO ---------- */
+    const FASE_APP = 'Beta';                       // Beta → Release Candidate → Estável
+    const BUILD_DATE = '05/10/2026';           // preenchido pelo build.sh
+    const CHANGELOG = [
+      { v: '1.8', t: 'Tela "Sobre o app" com informações da versão e atualização interna por APK.' },
+      { v: '1.7', t: 'Compartilhar em PDF (A4) ou texto, com escolha do formato.' },
+      { v: '1.6', t: 'Compartilhar pelo menu do Android, para qualquer aplicativo, com texto formatado.' },
+      { v: '1.5', t: 'Nova folha de impressão em A4 (individual e em lote).' },
+      { v: '1.4', t: 'Impressão pelo gerenciador de impressão do Android.' },
+      { v: '1.3', t: 'Edição de dígitos corrigida, substituição automática e botão limpar por cargo.' },
+      { v: '1.2', t: 'Recuperação automática das colinhas a partir da cópia de segurança.' },
+      { v: '1.1', t: 'Importação segura (mesclar ou substituir), proteção contra HTML nos títulos e dados por cargo estáveis.' },
+      { v: '1.0', t: 'Primeira versão: colinhas por turno, backup, tema claro/escuro.' }
+    ];
+    let infoApp = null;
+    let apkPendente = null;
+
+    function linhaSobre(rotulo, valor) {
+      return `<div class="about-row"><span>${esc(rotulo)}</span><span>${esc(valor)}</span></div>`;
+    }
+
+    async function carregarInfoApp() {
+      const P = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AppInfo;
+      if (P) {
+        try { infoApp = await P.getInfo(); } catch (err) { infoApp = null; }
+      }
+      const versao = infoApp ? infoApp.versionName : CHANGELOG[0].v;
+      document.getElementById('drawerVer').textContent = 'v' + versao;
+      return infoApp;
+    }
+
+    async function abrirSobre() {
+      fecharDrawer();
+      const info = infoApp || await carregarInfoApp();
+      const versao = info ? info.versionName : CHANGELOG[0].v;
+      document.getElementById('aboutPillVer').textContent = 'v' + versao;
+      document.getElementById('aboutPillFase').textContent = FASE_APP;
+
+      const dataBuild = BUILD_DATE.indexOf('__') === 0 ? 'Desenvolvimento' : BUILD_DATE;
+      const canal = info ? (info.updateEnabled ? 'Distribuição direta (APK)' : 'Google Play') : 'Navegador';
+      document.getElementById('aboutApp').innerHTML =
+        linhaSobre('Versão', versao + (info ? ` (build ${info.versionCode})` : '')) +
+        linhaSobre('Fase', FASE_APP) +
+        linhaSobre('Canal', canal) +
+        linhaSobre('Data da build', dataBuild) +
+        linhaSobre('Pacote', info ? info.packageName : '—');
+
+      document.getElementById('aboutDevice').innerHTML =
+        linhaSobre('Android', info ? `${info.androidVersion} (API ${info.sdk})` : '—') +
+        linhaSobre('Aparelho', info ? info.device : '—') +
+        linhaSobre('Colinhas salvas', String(colinhas.length)) +
+        linhaSobre('Armazenamento', 'Somente neste aparelho');
+
+      document.getElementById('aboutChangelog').innerHTML = CHANGELOG.map(
+        (c) => `<div class="changelog-item"><b>v${c.v}</b> — ${esc(c.t)}</div>`).join('');
+
+      document.getElementById('aboutUpdateBox').hidden = !(info && info.updateEnabled);
+      cancelarInstalacao();
+      document.getElementById('aboutModal').classList.add('active');
+    }
+
+    function fecharSobre() {
+      document.getElementById('aboutModal').classList.remove('active');
+      apkPendente = null;
+    }
+
+    function statusAtualizacao(msg, erro) {
+      const el = document.getElementById('aboutStatus');
+      el.textContent = msg || '';
+      el.hidden = !msg;
+      el.classList.toggle('erro', !!erro);
+    }
+
+    function cancelarInstalacao() {
+      apkPendente = null;
+      statusAtualizacao('');
+      document.getElementById('aboutConfirmButtons').hidden = true;
+      document.getElementById('aboutUpdateButtons').hidden = false;
+    }
+
+    async function atualizarApp() {
+      const P = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AppInfo;
+      if (!P) return;
+      statusAtualizacao('');
+      try {
+        const apk = await P.pickApk();
+        if (!apk.mesmoPacote) {
+          statusAtualizacao('Este APK é de outro aplicativo e não pode ser instalado aqui.', true);
+          return;
+        }
+        if (apk.versionCode < apk.atualVersionCode) {
+          statusAtualizacao(`Este APK (v${apk.versionName}) é mais antigo que o instalado. O Android não permite voltar de versão.`, true);
+          return;
+        }
+        apkPendente = apk;
+        const igual = apk.versionCode === apk.atualVersionCode;
+        statusAtualizacao(igual
+          ? `Este APK tem a mesma versão instalada (v${apk.versionName}). Deseja reinstalar?`
+          : `Atualizar para a versão v${apk.versionName}? Suas colinhas serão mantidas.`);
+        document.getElementById('aboutUpdateButtons').hidden = true;
+        document.getElementById('aboutConfirmButtons').hidden = false;
+      } catch (err) {
+        if (!/cancel/i.test(String((err && err.message) || err))) {
+          statusAtualizacao(String((err && err.message) || 'Não foi possível ler o APK.'), true);
+        }
+      }
+    }
+
+    async function confirmarInstalacao() {
+      const P = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AppInfo;
+      if (!P || !apkPendente) return;
+      try {
+        const r = await P.installApk();
+        if (r.precisaPermissao) {
+          statusAtualizacao('Ative "Permitir desta fonte" nas configurações que abriram e toque em Instalar novamente.');
+        } else {
+          statusAtualizacao('Instalador do Android aberto. Conclua a instalação para atualizar.');
+        }
+      } catch (err) {
+        statusAtualizacao(String((err && err.message) || 'Falha ao abrir o instalador.'), true);
+      }
+    }
+
+    carregarInfoApp();
 
     // Cópia de segurança: se o localStorage vier vazio (dados limpos pelo sistema), tenta recuperar do IndexedDB
     function restaurarDoIndexedDB() {
