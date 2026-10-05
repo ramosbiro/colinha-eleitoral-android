@@ -1715,13 +1715,34 @@
       document.getElementById('confirmDeleteModal').classList.remove('active');
     }
 
+    const LINHA = '━━━━━━━━━━━━━━━━━━';
+    const NUM_EMOJI = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣'];
+
+    // Dígitos separados por espaço; posições vazias aparecem como "_"
+    function digitosTexto(valor, qtd) {
+      const v = String(valor || '');
+      const out = [];
+      for (let k = 0; k < qtd; k++) out.push(v[k] || '_');
+      return out.join(' ');
+    }
+
+    // Bloco de uma colinha. Negrito com *...* (WhatsApp/Telegram); nos demais apps o texto continua legível.
     function formatarTextoColinha(c) {
-      let t = `📋 *${c.titulo}* (${c.turno}º Turno)\n`;
-      t += `---------------------------------\n`;
-      cargosDaColinha(c).forEach(x => {
-        t += `• *${x.nome}*: ${(c.dados || {})[x.id] || '____'}\n`;
+      let t = `*${c.titulo}* · ${c.turno}º Turno\n`;
+      if (c.data) t += `📅 ${c.data}\n`;
+      t += `${LINHA}\n`;
+      cargosDaColinha(c).forEach((x, idx) => {
+        t += `${NUM_EMOJI[idx]} *${x.nome}*\n`;
+        t += `      ▸ ${digitosTexto((c.dados || {})[x.id], x.digitos)}\n\n`;
       });
+      t += `${LINHA}`;
       return t;
+    }
+
+    function textoCompartilhamento(lista) {
+      const titulo = lista.length > 1 ? `🗳️ *COLINHAS ELEITORAIS* (${lista.length})` : '🗳️ *COLINHA ELEITORAL*';
+      const corpo = lista.map(formatarTextoColinha).join('\n\n');
+      return `${titulo}\n\n${corpo}\nℹ️ Confira sempre o número na urna antes de confirmar.`;
     }
 
     function abrirCompartilharAtual() {
@@ -1730,32 +1751,35 @@
       if (!c) return;
       c.dados = coletarDadosForm(c.dados);
       salvarMemoria();
-      dispararCompartilhar(formatarTextoColinha(c));
+      dispararCompartilhar(textoCompartilhamento([c]));
     }
 
     function compartilharColinhaUnica(id) {
       const c = colinhas.find(x => x.id === id);
       if (!c) return;
-      dispararCompartilhar(formatarTextoColinha(c));
+      dispararCompartilhar(textoCompartilhamento([c]));
     }
 
     function compartilharSelecionadas() {
       if (selecionados.size === 0) return;
       const lista = colinhas.filter(c => selecionados.has(c.id));
-      let texto = `📋 *COLINHAS ELEITORAIS (${lista.length})*\n\n`;
-      lista.forEach(c => {
-        texto += formatarTextoColinha(c) + '\n';
-      });
+      const texto = textoCompartilhamento(lista);
       dispararCompartilhar(texto);
     }
 
     let textoParaCopiar = '';
+    // Abre o menu de compartilhamento do Android (todos os apps instalados); cai no modal só se não houver suporte
     function dispararCompartilhar(texto) {
       textoParaCopiar = texto;
-      if (navigator.share) {
-        navigator.share({ title: 'Colinha Eleitoral', text: texto }).catch(() => {
-          mostrarModalShare(texto);
-        });
+      const S = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share;
+      const aoFalhar = (err) => {
+        if (err && /cancel/i.test(String(err.message || err))) return; // usuário fechou o menu
+        mostrarModalShare(texto);
+      };
+      if (S) {
+        S.share({ title: 'Colinha Eleitoral', text: texto, dialogTitle: 'Compartilhar colinha' }).catch(aoFalhar);
+      } else if (navigator.share) {
+        navigator.share({ title: 'Colinha Eleitoral', text: texto }).catch(aoFalhar);
       } else {
         mostrarModalShare(texto);
       }
