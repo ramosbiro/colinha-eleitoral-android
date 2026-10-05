@@ -859,6 +859,8 @@
         gap: 12px;
         padding: 10px;
       }
+      body.printing-batch > .app { display: none !important; }
+      body.printing-batch #batchPrintArea { display: block !important; }
       .batch-print-item {
         border: 1.5px dashed #000;
         padding: 10px;
@@ -1190,7 +1192,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar
         </button>
-        <button class="btn btn-sec" onclick="window.print()">
+        <button class="btn btn-sec" onclick="imprimirPagina()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Imprimir
         </button>
@@ -1787,9 +1789,24 @@
       }
     }
 
+    // No Android a WebView ignora window.print(): usa o plugin nativo que abre o gerenciador de impressão
+    function imprimirPagina() {
+      const P = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Print;
+      if (P) {
+        P.print({ name: 'Colinha Eleitoral' }).catch(() => window.print());
+      } else {
+        window.print();
+      }
+    }
+
+    // Ao voltar da impressão, restaura a tela normal
+    function fimImpressao() { document.body.classList.remove('printing-batch'); }
+    window.addEventListener('afterprint', fimImpressao);
+    window.addEventListener('focus', fimImpressao);
+
     function imprimirColinhaUnica(id) {
       abrirColinha(id);
-      setTimeout(() => window.print(), 150);
+      setTimeout(imprimirPagina, 150);
     }
 
     function imprimirSelecionadas() {
@@ -1814,7 +1831,8 @@
       `;
 
       fecharDrawer();
-      setTimeout(() => window.print(), 150);
+      document.body.classList.add('printing-batch');
+      setTimeout(imprimirPagina, 150);
     }
 
     /* EXPORTAÇÃO E IMPORTAÇÃO NATIVAS (CAPACITOR SHARE + GAVETA ANDROID) */
