@@ -27,7 +27,10 @@ public class PrintPlugin extends Plugin {
                 PrintManager pm = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
                 WebView webView = getBridge().getWebView();
                 PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter(jobName);
-                pm.print(jobName, adapter, new PrintAttributes.Builder().build());
+                pm.print(jobName, adapter, new PrintAttributes.Builder()
+                        .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                        .setMinMargins(new PrintAttributes.Margins(394, 394, 394, 394)) // ~10 mm (milésimos de polegada)
+                        .build());
                 call.resolve(new JSObject());
             } catch (Exception e) {
                 call.reject("Falha ao abrir a impressão: " + e.getMessage());

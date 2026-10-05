@@ -820,52 +820,46 @@
     }
 
     /* Estilos de Impressão */
+    #printArea { display: none; }
+
+    @page { size: A4; margin: 10mm; }
+
     @media print {
-      .btn-limpar-card { display: none !important; }
-      body {
-        background: #fff !important;
-        color: #000 !important;
-        padding: 0;
-      }
-      .top-nav, .bottom-actions, .overlay, .drawer, .modal, .screen-welcome {
-        display: none !important;
-      }
-      .screen-voting {
-        display: block !important;
-      }
-      .card {
-        border: 1px solid #000 !important;
-        background: #fff !important;
-        page-break-inside: avoid;
-        margin-bottom: 5px;
-        padding: 5px 8px;
-      }
-      .cargo-nome { color: #000 !important; }
-      .cargo-tag {
-        background: none !important;
-        color: #000 !important;
-        border: 1px solid #000;
-      }
-      .digit-box {
-        border-color: #000 !important;
-        background: #fff !important;
-        color: #000 !important;
-        height: 36px;
-        width: 30px;
-      }
-      .batch-print-sheet {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        padding: 10px;
-      }
-      body.printing-batch > .app { display: none !important; }
-      body.printing-batch #batchPrintArea { display: block !important; }
-      .batch-print-item {
-        border: 1.5px dashed #000;
-        padding: 10px;
-        page-break-inside: avoid;
-      }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { background: #fff !important; color: #0f172a !important; }
+      body { display: block !important; padding: 0 !important; min-height: 0 !important; }
+      body > .app, .overlay, .drawer, .modal { display: none !important; }
+      #printArea { display: block !important; }
+
+      .ps-page { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #0f172a; page-break-after: always; break-after: page; }
+      .ps-page:last-child { page-break-after: auto; break-after: auto; }
+
+      .ps-head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 0.6mm solid #0f172a; padding-bottom: 4mm; margin-bottom: 7mm; }
+      .ps-brand { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: #475569; font-weight: 700; }
+      .ps-title { font-size: 22pt; font-weight: 800; line-height: 1.1; margin-top: 1.5mm; }
+      .ps-meta { text-align: right; font-size: 9pt; color: #334155; line-height: 1.5; }
+      .ps-turno { display: inline-block; border: 0.4mm solid #0f172a; border-radius: 99px; padding: 0.8mm 3.5mm; font-weight: 800; font-size: 9pt; color: #0f172a; margin-bottom: 1.5mm; }
+
+      .ps-row { display: flex; align-items: center; border: 0.4mm solid #0f172a; border-radius: 3mm; padding: 5mm 6mm; margin-bottom: 6mm; break-inside: avoid; page-break-inside: avoid; }
+      .ps-order { flex: 0 0 9.5mm; height: 9.5mm; border-radius: 50%; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11pt; }
+      .ps-cargo { flex: 1; margin-left: 5mm; font-size: 15pt; font-weight: 700; }
+      .ps-sub { display: block; font-size: 8.5pt; font-weight: 500; color: #64748b; margin-top: 0.5mm; }
+      .ps-digits { display: flex; gap: 2.5mm; }
+      .ps-d { width: 14mm; height: 18mm; border: 0.5mm solid #0f172a; border-radius: 2mm; display: flex; align-items: center; justify-content: center; font-size: 25pt; font-weight: 800; font-family: ui-monospace, Menlo, Consolas, monospace; background: #f1f5f9; }
+
+      .ps-foot { margin-top: 6mm; padding-top: 3mm; border-top: 0.3mm dashed #94a3b8; display: flex; justify-content: space-between; font-size: 8pt; color: #64748b; }
+
+      /* Impressão em lote: cartões compactos em 2 colunas */
+      .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+      .ps-mini { border: 0.4mm solid #0f172a; border-radius: 3mm; padding: 3.5mm 4mm; break-inside: avoid; page-break-inside: avoid; }
+      .ps-mini-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 0.3mm solid #cbd5e1; padding-bottom: 1.5mm; margin-bottom: 2mm; }
+      .ps-mini-title { font-size: 11pt; font-weight: 800; }
+      .ps-mini-turno { font-size: 8pt; font-weight: 700; color: #475569; }
+      .ps-mini-row { display: flex; align-items: center; justify-content: space-between; padding: 1.2mm 0; }
+      .ps-mini-cargo { font-size: 8.5pt; font-weight: 600; }
+      .ps-mini .ps-digits { gap: 1.2mm; }
+      .ps-mini .ps-d { width: 6.5mm; height: 8mm; font-size: 12pt; border-width: 0.3mm; border-radius: 1.2mm; }
+      .ps-mini-date { font-size: 7pt; color: #64748b; margin-top: 1.5mm; }
     }
   </style>
 </head>
@@ -1192,7 +1186,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar
         </button>
-        <button class="btn btn-sec" onclick="imprimirPagina()">
+        <button class="btn btn-sec" onclick="imprimirColinhaAtual()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Imprimir
         </button>
@@ -1204,7 +1198,7 @@
     </section>
   </div>
 
-  <div id="batchPrintArea" style="display:none;"></div>
+  <div id="printArea"></div>
 
   <script>
     if (navigator.storage && navigator.storage.persist) {
@@ -1237,12 +1231,12 @@
 
     // Cargos: o id (data-cargo) é a chave estável dos dados salvos
     const CARGOS = [
-      { id: 'dep_fed', nome: 'Deputado Federal',        curto: 'Dep. Fed.', turno: 1 },
-      { id: 'dep_est', nome: 'Deputado Estadual',       curto: 'Dep. Est.', turno: 1 },
-      { id: 'sen_1',   nome: 'Senador (1ª Vaga)',       curto: 'Senador 1', turno: 1 },
-      { id: 'sen_2',   nome: 'Senador (2ª Vaga)',       curto: 'Senador 2', turno: 1 },
-      { id: 'gov',     nome: 'Governador',              curto: 'Governador', turno: 0 },
-      { id: 'pres',    nome: 'Presidente da República', curto: 'Presidente', turno: 0 }
+      { id: 'dep_fed', nome: 'Deputado Federal',        curto: 'Dep. Fed.', turno: 1, digitos: 4 },
+      { id: 'dep_est', nome: 'Deputado Estadual',       curto: 'Dep. Est.', turno: 1, digitos: 5 },
+      { id: 'sen_1',   nome: 'Senador (1ª Vaga)',       curto: 'Senador 1', turno: 1, digitos: 3 },
+      { id: 'sen_2',   nome: 'Senador (2ª Vaga)',       curto: 'Senador 2', turno: 1, digitos: 3 },
+      { id: 'gov',     nome: 'Governador',              curto: 'Governador', turno: 0, digitos: 2 },
+      { id: 'pres',    nome: 'Presidente da República', curto: 'Presidente', turno: 0, digitos: 2 }
     ];
     const NOME_PARA_ID = {
       'Deputado Federal': 'dep_fed',
@@ -1800,39 +1794,99 @@
     }
 
     // Ao voltar da impressão, restaura a tela normal
-    function fimImpressao() { document.body.classList.remove('printing-batch'); }
+    function fimImpressao() { document.body.classList.remove('printing'); }
     window.addEventListener('afterprint', fimImpressao);
     window.addEventListener('focus', fimImpressao);
 
-    function imprimirColinhaUnica(id) {
-      abrirColinha(id);
+    function digitosHtml(valor, qtd) {
+      const v = String(valor || '');
+      let h = '';
+      for (let k = 0; k < qtd; k++) h += `<span class="ps-d">${esc(v[k] || '')}</span>`;
+      return h;
+    }
+
+    function rodapeFolha(extra) {
+      const agora = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return `<div class="ps-foot"><span>${extra}</span><span>Impresso em ${agora}</span></div>`;
+    }
+
+    // Folha cheia (1 colinha por página)
+    function folhaColinha(c) {
+      const linhas = cargosDaColinha(c).map((x, idx) => `
+        <div class="ps-row">
+          <div class="ps-order">${idx + 1}º</div>
+          <div class="ps-cargo">${x.nome}<span class="ps-sub">${x.digitos} dígitos</span></div>
+          <div class="ps-digits">${digitosHtml((c.dados || {})[x.id], x.digitos)}</div>
+        </div>`).join('');
+      return `
+        <section class="ps-page">
+          <div class="ps-head">
+            <div>
+              <div class="ps-brand">Colinha Eleitoral</div>
+              <div class="ps-title">${esc(c.titulo)}</div>
+            </div>
+            <div class="ps-meta">
+              <div class="ps-turno">${c.turno}º TURNO</div>
+              <div>${esc(c.data || '')}</div>
+            </div>
+          </div>
+          ${linhas}
+          ${rodapeFolha('Ordem de votação na urna eletrônica')}
+        </section>`;
+    }
+
+    // Cartão compacto (várias colinhas por página)
+    function miniColinha(c) {
+      const linhas = cargosDaColinha(c).map(x => `
+        <div class="ps-mini-row">
+          <span class="ps-mini-cargo">${x.curto}</span>
+          <span class="ps-digits">${digitosHtml((c.dados || {})[x.id], x.digitos)}</span>
+        </div>`).join('');
+      return `
+        <div class="ps-mini">
+          <div class="ps-mini-head">
+            <span class="ps-mini-title">${esc(c.titulo)}</span>
+            <span class="ps-mini-turno">${c.turno}º TURNO</span>
+          </div>
+          ${linhas}
+          <div class="ps-mini-date">${esc(c.data || '')}</div>
+        </div>`;
+    }
+
+    function imprimirFolha(html) {
+      fecharDrawer();
+      document.getElementById('printArea').innerHTML = html;
+      document.body.classList.add('printing');
       setTimeout(imprimirPagina, 150);
+    }
+
+    function imprimirColinhaAtual() {
+      if (!colinhaAtivaId) return;
+      const c = colinhas.find(x => x.id === colinhaAtivaId);
+      if (!c) return;
+      imprimirFolha(folhaColinha(Object.assign({}, c, { dados: coletarDadosForm(c.dados) })));
+    }
+
+    function imprimirColinhaUnica(id) {
+      const c = colinhas.find(x => x.id === id);
+      if (c) imprimirFolha(folhaColinha(c));
     }
 
     function imprimirSelecionadas() {
       if (selecionados.size === 0) return;
       const lista = colinhas.filter(c => selecionados.has(c.id));
-
-      const printArea = document.getElementById('batchPrintArea');
-      printArea.innerHTML = `
-        <div class="batch-print-sheet">
-          ${lista.map(c => `
-            <div class="batch-print-item">
-              <h3 style="font-size:14px; margin-bottom:4px;">${esc(c.titulo)} (${c.turno}º Turno)</h3>
-              <div style="font-size:11px; margin-bottom:8px; color:#555;">${esc(c.data)}</div>${cargosDaColinha(c).map(x => `
-                <div style="display:flex; justify-content:space-between; border-bottom:1px dotted #ccc; padding:3px 0; font-size:12px;">
-                  <span>${x.nome}:</span>
-                  <strong style="font-family:monospace; font-size:14px;">${esc((c.dados || {})[x.id]) || '____'}</strong>
-                </div>
-              `).join('')}
+      if (lista.length === 1) { imprimirFolha(folhaColinha(lista[0])); return; }
+      imprimirFolha(`
+        <section class="ps-page">
+          <div class="ps-head">
+            <div>
+              <div class="ps-brand">Colinha Eleitoral</div>
+              <div class="ps-title">${lista.length} colinhas</div>
             </div>
-          `).join('')}
-        </div>
-      `;
-
-      fecharDrawer();
-      document.body.classList.add('printing-batch');
-      setTimeout(imprimirPagina, 150);
+          </div>
+          <div class="ps-grid">${lista.map(miniColinha).join('')}</div>
+          ${rodapeFolha('Ordem de votação na urna eletrônica')}
+        </section>`);
     }
 
     /* EXPORTAÇÃO E IMPORTAÇÃO NATIVAS (CAPACITOR SHARE + GAVETA ANDROID) */
