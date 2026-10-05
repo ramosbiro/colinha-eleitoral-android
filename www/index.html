@@ -976,6 +976,22 @@
     </div>
   </div>
 
+  <!-- Modal de formato do compartilhamento -->
+  <div class="modal" id="formatoModal">
+    <div class="modal-box">
+      <div class="modal-icon-circle modal-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight:800;">Compartilhar como</h3>
+      <p style="font-size: 0.8rem; color:var(--text-muted);" id="formatoModalMsg"></p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+        <button class="btn btn-main" onclick="escolherFormato('texto')">Texto (WhatsApp e redes)</button>
+        <button class="btn btn-main" onclick="escolherFormato('pdf')">Arquivo PDF</button>
+        <button class="btn btn-sec" onclick="fecharModalFormato()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de Compartilhamento -->
   <div class="modal" id="shareModal">
     <div class="modal-box">
@@ -1751,20 +1767,239 @@
       if (!c) return;
       c.dados = coletarDadosForm(c.dados);
       salvarMemoria();
-      dispararCompartilhar(textoCompartilhamento([c]));
+      pedirFormatoCompartilhar([c]);
     }
 
     function compartilharColinhaUnica(id) {
       const c = colinhas.find(x => x.id === id);
       if (!c) return;
-      dispararCompartilhar(textoCompartilhamento([c]));
+      pedirFormatoCompartilhar([c]);
     }
 
     function compartilharSelecionadas() {
       if (selecionados.size === 0) return;
       const lista = colinhas.filter(c => selecionados.has(c.id));
-      const texto = textoCompartilhamento(lista);
-      dispararCompartilhar(texto);
+      pedirFormatoCompartilhar(lista);
+    }
+
+
+    /* ---------- GERADOR DE PDF (sem bibliotecas, A4, Helvetica) ---------- */
+    const PDF = {
+      mm: (v) => (v * 72 / 25.4).toFixed(2),
+      cor: (hex) => {
+        const n = parseInt(hex.slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => (v / 255).toFixed(3)).join(' ');
+      },
+      str: (t) => {
+        let o = '';
+        for (const ch of String(t == null ? '' : t)) {
+          const c = ch.codePointAt(0);
+          if (c === 0xFE0F || c === 0x200D) continue;
+          const troca = { 0x2013: '-', 0x2014: '-', 0x2018: "'", 0x2019: "'", 0x201C: '"', 0x201D: '"', 0x2026: '...', 0x2022: '-' }[c];
+          if (troca) { o += troca; continue; }
+          const b = (c > 255 || (c >= 0x80 && c <= 0x9F) || c < 32) ? '?' : ch;
+          o += (b === '\\' || b === '(' || b === ')') ? '\\' + b : b;
+        }
+        return o;
+      }
+    };
+
+    function pdfPagina() {
+      const ops = [];
+      const P = (x, y) => PDF.mm(x) + ' ' + PDF.mm(297 - y);
+      return {
+        ops,
+        rect(x, y, w, h, r, o) {
+          const k = 0.5523 * r;
+          const pts = [];
+          pts.push(P(x + r, y) + ' m');
+          pts.push(P(x + w - r, y) + ' l');
+          pts.push(P(x + w - r + k, y) + ' ' + P(x + w, y + r - k) + ' ' + P(x + w, y + r) + ' c');
+          pts.push(P(x + w, y + h - r) + ' l');
+          pts.push(P(x + w, y + h - r + k) + ' ' + P(x + w - r + k, y + h) + ' ' + P(x + w - r, y + h) + ' c');
+          pts.push(P(x + r, y + h) + ' l');
+          pts.push(P(x + r - k, y + h) + ' ' + P(x, y + h - r + k) + ' ' + P(x, y + h - r) + ' c');
+          pts.push(P(x, y + r) + ' l');
+          pts.push(P(x, y + r - k) + ' ' + P(x + r - k, y) + ' ' + P(x + r, y) + ' c');
+          let pre = '';
+          if (o.fill) pre += PDF.cor(o.fill) + ' rg ';
+          if (o.stroke) pre += PDF.cor(o.stroke) + ' RG ' + PDF.mm(o.lw || 0.3) + ' w ';
+          ops.push(pre + pts.join(' ') + ' h ' + (o.fill && o.stroke ? 'B' : (o.fill ? 'f' : 'S')));
+        },
+        linha(x1, y1, x2, y2, lw, cor, tracejada) {
+          ops.push(PDF.cor(cor) + ' RG ' + PDF.mm(lw) + ' w ' + (tracejada ? '[' + PDF.mm(1.2) + ' ' + PDF.mm(1) + '] 0 d ' : '[] 0 d ') +
+            P(x1, y1) + ' m ' + P(x2, y2) + ' l S [] 0 d');
+        },
+        texto(x, y, t, tam, negrito, cor, espaco) {
+          ops.push('BT /' + (negrito ? 'F2' : 'F1') + ' ' + tam + ' Tf ' + PDF.cor(cor) + ' rg ' +
+            (espaco || 0) + ' Tc ' + P(x, y) + ' Td (' + PDF.str(t) + ') Tj ET');
+        }
+      };
+    }
+
+    // Largura aproximada para decidir redução de fonte (não usada em alinhamento)
+    function larguraAprox(t, tam) { return String(t).length * tam * 0.6 * 25.4 / 72; }
+
+    function pdfDigitos(pg, direitaX, topoY, valor, qtd, w, h, gap, tam, lw) {
+      const v = String(valor || '');
+      for (let k = qtd - 1; k >= 0; k--) {
+        const x = direitaX - (qtd - k) * w - (qtd - 1 - k) * gap;
+        pg.rect(x, topoY, w, h, w * 0.14, { fill: '#f1f5f9', stroke: '#0f172a', lw });
+        if (v[k]) {
+          const larg = 0.556 * tam * 25.4 / 72;           // dígitos Helvetica têm largura fixa (556)
+          const capH = 0.72 * tam * 25.4 / 72;
+          pg.texto(x + (w - larg) / 2, topoY + h / 2 + capH / 2, v[k], tam, true, '#0f172a');
+        }
+      }
+    }
+
+    function pdfCabecalho(pg, titulo, sub, turno) {
+      pg.texto(10, 16, 'COLINHA ELEITORAL', 8.5, true, '#475569', 1.6);
+      const tam = larguraAprox(titulo, 22) > 135 ? 15 : 22;
+      pg.texto(10, 26, titulo, tam, true, '#0f172a');
+      if (sub) pg.texto(10, 32, sub, 9, false, '#475569');
+      if (turno) {
+        const larg = 4754 * 9 / 1000 * 25.4 / 72;          // "1º TURNO" em Helvetica-Bold 9pt
+        const w = larg + 7;
+        pg.rect(200 - w, 11, w, 6.5, 3.25, { stroke: '#0f172a', lw: 0.4 });
+        pg.texto(200 - w + 3.5, 15.2, turno + 'º TURNO', 9, true, '#0f172a');
+      }
+      pg.linha(10, 36, 200, 36, 0.6, '#0f172a');
+    }
+
+    function pdfRodape(pg, y, texto) {
+      const agora = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      pg.linha(10, y, 200, y, 0.3, '#94a3b8', true);
+      pg.texto(10, y + 5, texto + '  ·  Impresso em ' + agora, 8, false, '#64748b');
+    }
+
+    function pdfFolhaIndividual(c) {
+      const pg = pdfPagina();
+      pdfCabecalho(pg, c.titulo, c.data || '', c.turno);
+      let y = 44;
+      cargosDaColinha(c).forEach((x, idx) => {
+        pg.rect(10, y, 190, 29, 3, { stroke: '#0f172a', lw: 0.4 });
+        pg.rect(16, y + 9.75, 9.5, 9.5, 4.75, { fill: '#0f172a' });
+        const ordem = (idx + 1) + 'º';
+        pg.texto(16 + (9.5 - 921 * 11 / 1000 * 25.4 / 72) / 2, y + 14.5 + 1.4, ordem, 11, true, '#ffffff');
+        pg.texto(30.5, y + 13, x.nome, 15, true, '#0f172a');
+        pg.texto(30.5, y + 19.5, x.digitos + ' dígitos', 8.5, false, '#64748b');
+        pdfDigitos(pg, 194, y + 5.5, (c.dados || {})[x.id], x.digitos, 14, 18, 2.5, 25, 0.5);
+        y += 35;
+      });
+      pdfRodape(pg, 262, 'Ordem de votação na urna eletrônica');
+      return [pg];
+    }
+
+    function pdfMini(pg, x, y, c) {
+      const cargos = cargosDaColinha(c);
+      const h = 10 + cargos.length * 9.6 + 8;
+      pg.rect(x, y, 92, h, 3, { stroke: '#0f172a', lw: 0.4 });
+      pg.texto(x + 4, y + 7, c.titulo.length > 22 ? c.titulo.slice(0, 21) + '...' : c.titulo, 11, true, '#0f172a');
+      pg.texto(x + 92 - 4 - 4754 * 8 / 1000 * 25.4 / 72, y + 6.8, c.turno + 'º TURNO', 8, true, '#475569');
+      pg.linha(x + 4, y + 10, x + 88, y + 10, 0.25, '#cbd5e1');
+      cargos.forEach((cg, i) => {
+        const ry = y + 12 + i * 9.6;
+        pg.texto(x + 4, ry + 5.6, cg.curto, 8.5, true, '#0f172a');
+        pdfDigitos(pg, x + 88, ry, (c.dados || {})[cg.id], cg.digitos, 6.5, 8, 1.2, 12, 0.3);
+      });
+      if (c.data) pg.texto(x + 4, y + h - 3, c.data, 7, false, '#64748b');
+      return h;
+    }
+
+    function pdfFolhaLote(lista) {
+      const paginas = [];
+      let pg = pdfPagina();
+      pdfCabecalho(pg, lista.length + ' colinhas', '', 0);
+      paginas.push(pg);
+      let y = 44, col = 0, alturaLinha = 0;
+      for (const c of lista) {
+        const h = 10 + cargosDaColinha(c).length * 9.6 + 8;
+        if (col === 0 && y + h > 268) {
+          pg = pdfPagina(); paginas.push(pg); y = 12;
+        }
+        pdfMini(pg, 10 + col * 98, y, c);
+        alturaLinha = Math.max(alturaLinha, h);
+        col++;
+        if (col === 2) { col = 0; y += alturaLinha + 6; alturaLinha = 0; }
+      }
+      paginas.forEach((p) => pdfRodape(p, 285, 'Ordem de votação na urna eletrônica'));
+      return paginas;
+    }
+
+    // Monta o arquivo PDF (string binária, 1 caractere = 1 byte)
+    function montarPdf(paginas) {
+      const objs = [];
+      const add = (conteudo) => { objs.push(conteudo); return objs.length; };
+      add('<< /Type /Catalog /Pages 2 0 R >>');
+      add('');
+      add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+      add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+      const kids = [];
+      paginas.forEach((pg) => {
+        const stream = pg.ops.join('\n');
+        const idC = add('<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream');
+        const idP = add('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + idC + ' 0 R >>');
+        kids.push(idP + ' 0 R');
+      });
+      objs[1] = '<< /Type /Pages /Count ' + kids.length + ' /Kids [' + kids.join(' ') + '] >>';
+      let out = '%PDF-1.4\n';
+      const offsets = [];
+      objs.forEach((o, i) => { offsets.push(out.length); out += (i + 1) + ' 0 obj\n' + o + '\nendobj\n'; });
+      const xref = out.length;
+      out += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n';
+      offsets.forEach((off) => { out += String(off).padStart(10, '0') + ' 00000 n \n'; });
+      out += 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF';
+      return out;
+    }
+
+    function gerarPdf(lista) {
+      const paginas = lista.length === 1 ? pdfFolhaIndividual(lista[0]) : pdfFolhaLote(lista);
+      return montarPdf(paginas);
+    }
+
+    async function compartilharPdf(lista) {
+      const bin = gerarPdf(lista);
+      const dataHoje = new Date().toISOString().slice(0, 10);
+      const slug = lista.length === 1
+        ? lista[0].titulo.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').toLowerCase() || 'colinha'
+        : 'colinhas';
+      const nome = `${slug}_${dataHoje}.pdf`;
+      try {
+        const cap = window.Capacitor && window.Capacitor.Plugins;
+        if (cap && cap.Filesystem && cap.Share) {
+          const arq = await cap.Filesystem.writeFile({ path: nome, data: btoa(bin), directory: 'CACHE' });
+          await cap.Share.share({ title: 'Colinha Eleitoral', files: [arq.uri], dialogTitle: 'Compartilhar PDF' });
+          return;
+        }
+        // Fora do app (navegador): abre o PDF em nova aba
+        const bytes = Uint8Array.from(bin, ch => ch.charCodeAt(0));
+        window.open(URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })), '_blank');
+      } catch (err) {
+        if (!/cancel/i.test(String((err && err.message) || err))) {
+          mostrarCustomAlert('Erro', 'Não foi possível gerar ou compartilhar o PDF.', 'red');
+        }
+      }
+    }
+
+    /* ---------- ESCOLHA DE FORMATO (texto ou PDF) ---------- */
+    let listaParaCompartilhar = null;
+    function pedirFormatoCompartilhar(lista) {
+      listaParaCompartilhar = lista;
+      document.getElementById('formatoModalMsg').textContent =
+        lista.length === 1 ? `"${lista[0].titulo}"` : `${lista.length} colinhas selecionadas`;
+      document.getElementById('formatoModal').classList.add('active');
+    }
+    function fecharModalFormato() {
+      document.getElementById('formatoModal').classList.remove('active');
+      listaParaCompartilhar = null;
+    }
+    function escolherFormato(tipo) {
+      const lista = listaParaCompartilhar;
+      fecharModalFormato();
+      if (!lista) return;
+      if (tipo === 'pdf') compartilharPdf(lista);
+      else dispararCompartilhar(textoCompartilhamento(lista));
     }
 
     let textoParaCopiar = '';
